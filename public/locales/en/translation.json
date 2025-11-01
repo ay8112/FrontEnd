@@ -1,0 +1,14 @@
+{
+  "appName": "UP Swachhta Mitra",
+  "login": "Login",
+  "register": "Register",
+  "dashboard": "Dashboard",
+  "adminDashboard": "Admin Dashboard",
+  "logout": "Logout",
+  "heatmap": "City Heatmap",
+  "analytics": "Analytics Dashboard",
+  "language": "Language",
+  "english": "English",
+  "hindi": "Hindi",
+  "urdu": "Urdu"
+}

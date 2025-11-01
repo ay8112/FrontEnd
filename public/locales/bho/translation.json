@@ -1,0 +1,15 @@
+{
+  "appName": "क्लीनसिटी एआई",
+  "login": "लॉगिन",
+  "register": "रजिस्टर",
+  "dashboard": "डैशबोर्ड",
+  "adminDashboard": "एडमिन डैशबोर्ड",
+  "logout": "लॉगआउट",
+  "heatmap": "सिटी हीटमैप",
+  "analytics": "एनालिटिक्स डैशबोर्ड",
+  "language": "भाषा",
+  "english": "अंग्रेज़ी",
+  "hindi": "हिंदी",
+  "bhojpuri": "भोजपुरी",
+  "awadhi": "अवधी"
+}
