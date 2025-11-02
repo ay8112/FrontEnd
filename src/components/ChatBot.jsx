@@ -28,7 +28,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import DeleteSweepIcon from '@mui/icons-material/DeleteSweep';
 import { useTranslation } from 'react-i18next';
-import axios from 'axios';
+import api from '../services/api';
 
 const ChatBot = () => {
   const { t, i18n } = useTranslation();
@@ -230,7 +230,7 @@ const ChatBot = () => {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 18000); // 18 second timeout (longer than backend)
 
-      const res = await axios.post('/api/chatbot', {
+      const res = await api.post('/api/chatbot', {
         message: currentInput,
         lang: chatLang,
         userId,

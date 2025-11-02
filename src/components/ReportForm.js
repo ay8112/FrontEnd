@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
   TextField,
   MenuItem,
@@ -21,6 +21,7 @@ import VoiceInput from './VoiceInput';
 import CameraCapture from './CameraCapture';
 import reportService from '../services/reportService';
 import classifyService from '../services/classifyService';
+import api from '../services/api';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 
@@ -40,6 +41,22 @@ const ReportForm = ({ onSubmitSuccess }) => {
   const [prediction, setPrediction] = useState(null);
   const [useAutoLocation, setUseAutoLocation] = useState(true);
   const [showCamera, setShowCamera] = useState(false);
+  
+  // Create image preview URL and clean up on unmount or image change
+  const imagePreviewUrl = useMemo(() => {
+    if (!image) return null;
+    return URL.createObjectURL(image);
+  }, [image]);
+
+  useEffect(() => {
+    // Cleanup function to revoke object URL
+    return () => {
+      if (imagePreviewUrl) {
+        URL.revokeObjectURL(imagePreviewUrl);
+      }
+    };
+  }, [imagePreviewUrl]);
+
   const scrollToCategory = () => {
     try {
       const el = document.getElementById('category-field');
@@ -68,13 +85,12 @@ const ReportForm = ({ onSubmitSuccess }) => {
           async (position) => {
             const { latitude, longitude } = position.coords;
             try {
-              const res = await fetch('/api/location', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ lat: latitude, lng: longitude }),
+              const res = await api.post('/api/location', {
+                lat: latitude,
+                lng: longitude
               });
-              const data = await res.json();
-              if (res.ok && data.address) {
+              const data = res.data;
+              if (data.address) {
                 setFormData((prev) => ({ ...prev, address: data.address }));
                 setLocation({ latitude, longitude });
                 toast.success(t('locationUpdated'));
@@ -119,13 +135,11 @@ const ReportForm = ({ onSubmitSuccess }) => {
     if (!canGeocode) return;
     const t = setTimeout(async () => {
       try {
-        const res = await fetch('/api/location/geocode', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ address: formData.address.trim() }),
+        const res = await api.post('/api/location/geocode', {
+          address: formData.address.trim()
         });
-        const data = await res.json();
-        if (res.ok && typeof data.lat === 'number' && typeof data.lng === 'number') {
+        const data = res.data;
+        if (typeof data.lat === 'number' && typeof data.lng === 'number') {
           setLocation({ latitude: data.lat, longitude: data.lng });
         }
       } catch (err) {
@@ -355,9 +369,29 @@ const ReportForm = ({ onSubmitSuccess }) => {
         </Box>
       )}
       {image && (
-        <Typography variant="caption" sx={{ display: 'block', mb: 2 }}>
-          {t('selected')}: {image.name}
-        </Typography>
+        <Box sx={{ mb: 2 }}>
+          <Typography variant="caption" sx={{ display: 'block', mb: 1 }}>
+            {t('selected')}: {image.name}
+          </Typography>
+          {imagePreviewUrl && (
+            <Box
+              component="img"
+              src={imagePreviewUrl}
+              alt="Preview"
+              sx={{
+                maxWidth: '100%',
+                maxHeight: 300,
+                width: 'auto',
+                height: 'auto',
+                borderRadius: 2,
+                border: '2px solid rgba(0,170,255,0.3)',
+                boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+                display: 'block',
+                margin: '0 auto',
+              }}
+            />
+          )}
+        </Box>
       )}
       {classifying && (
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 2 }}>

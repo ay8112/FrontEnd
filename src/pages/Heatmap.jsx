@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Container, Paper, Typography, Box, CircularProgress } from '@mui/material';
 import { MapContainer, TileLayer, useMap, CircleMarker, Popup } from 'react-leaflet';
-import axios from 'axios';
+import api from '../services/api';
 import 'leaflet/dist/leaflet.css';
 import 'leaflet.heat';
 import L from 'leaflet';
@@ -20,7 +20,7 @@ const Heatmap = () => {
 
   const fetchHeatmapData = async () => {
     try {
-      const res = await axios.get('/api/heatmap-data');
+      const res = await api.get('/api/heatmap-data');
       setHeatmapData(res.data || []);
     } catch (err) {
       console.error('Failed to load heatmap data:', err);

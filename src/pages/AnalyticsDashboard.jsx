@@ -3,7 +3,7 @@ import { Container, Paper, Typography, Box, Button, CircularProgress } from '@mu
 import { MapContainer, TileLayer, useMap } from 'react-leaflet';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
-import axios from 'axios';
+import api from '../services/api';
 import 'leaflet/dist/leaflet.css';
 import 'leaflet.heat';
 import {
@@ -29,8 +29,8 @@ const AnalyticsDashboard = () => {
     setLoading(true);
     try {
       const [chartRes, heatRes] = await Promise.all([
-        axios.get('/api/chart-data'),
-        axios.get('/api/heatmap-data')
+        api.get('/api/chart-data'),
+        api.get('/api/heatmap-data')
       ]);
       setCategoryData(chartRes.data?.categoryDistribution || []);
       setVolumeData(chartRes.data?.volumeDaily || []);
