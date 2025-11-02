@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const api = axios.create({
   // Backend runs on 3000, frontend dev server on 3001
-  baseURL: process.env.REACT_APP_API_URL || 'http://localhost:3000',
+  baseURL: process.env.REACT_APP_API_URL || 'https://behindend.onrender.com',
   headers: {
     'Content-Type': 'application/json',
   },
